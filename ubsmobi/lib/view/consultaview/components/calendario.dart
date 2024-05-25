@@ -41,15 +41,15 @@ class _WeekDaysComponentState extends State<WeekDaysComponent> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 10),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 8.0),
+        const SizedBox(height: 10),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 8.0),
           child: Text(
             'Consultas Disponíveis',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Row(
           children: _buildWeekDays(),
         ),
@@ -59,7 +59,7 @@ class _WeekDaysComponentState extends State<WeekDaysComponent> {
             height: 270,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: Colors.purple[100],
+              color: Color(0xffF6F7FB),
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -67,43 +67,52 @@ class _WeekDaysComponentState extends State<WeekDaysComponent> {
                   itemCount: especialistas.length,
                   itemBuilder: (context, index) {
                     return Card(
-                      child: ListTile(
-                        title: Text(
-                          '${especialistas[index].especialidade} - ${especialistas[index].nome}\nVagas Disponíveis',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold),
+                      elevation: 4,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Color(0xffEEF5FB),
+                          borderRadius: BorderRadius.circular(15),
                         ),
-                        subtitle: Text(
-                          '08:00 - 18:00',
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.grey[800]),
-                        ),
-                        trailing: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.purple[300],
+                        child: ListTile(
+                          title: Text(
+                            '${especialistas[index].especialidade} - ${especialistas[index].nome}\nVagas Disponíveis',
+                            style: TextStyle(
+                                color: Colors.grey[900],
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold),
                           ),
-                          onPressed: () async {
-                            DateFormat dateFormat = DateFormat('yyyy-MM-dd');
-                            print(especialistas[0].nome);
-                            print(dayclicked);
-                            if (dayclicked.weekday != DateTime.saturday &&
-                                dayclicked.weekday != DateTime.sunday) {
-                              await consultaResquet.postConsultDay({
-                                'esp': especialistas[index]
-                                    .idEspecialista
-                                    .toString(),
-                                'date':
-                                    dateFormat.format(dayclicked).toString(),
-                                "pac_des_nome": "5",
-                              });
-                              widget.getconsultasList();
-                            }
-                          },
-                          child: Text(
-                            'AGENDAR',
-                            style: TextStyle(color: Colors.white),
+                          subtitle: Text(
+                            '08:00 - 18:00',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.lightGreen[800]),
+                          ),
+                          trailing: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey[900],
+                            ),
+                            onPressed: () async {
+                              DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+                              print(especialistas[0].nome);
+                              print(dayclicked);
+                              if (dayclicked.weekday != DateTime.saturday &&
+                                  dayclicked.weekday != DateTime.sunday) {
+                                await consultaResquet.postConsultDay({
+                                  'esp': especialistas[index]
+                                      .idEspecialista
+                                      .toString(),
+                                  'date':
+                                      dateFormat.format(dayclicked).toString(),
+                                  "pac_des_nome": "5",
+                                });
+                                widget.getconsultasList();
+                              }
+                            },
+                            child: const Text(
+                              'AGENDAR',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ),
@@ -158,13 +167,12 @@ class WeekComponent extends StatelessWidget {
         children: [
           Text(
             DateFormat('E').format(day),
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           GestureDetector(
             onTap: onTap,
             child: CircleAvatar(
-              backgroundColor:
-                  isSelected ? Colors.purple[300] : Colors.grey[100],
+              backgroundColor: isSelected ? Colors.grey[900] : Colors.grey[100],
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
