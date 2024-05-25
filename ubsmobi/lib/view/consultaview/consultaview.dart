@@ -8,16 +8,14 @@ import 'package:ubsmobi/repository/pacient_repository.dart';
 import '../../repository/especlista_repository.dart';
 import 'components/calendario.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+class ConsultaView extends StatefulWidget {
+  const ConsultaView();
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<ConsultaView> createState() => _ConsultaViewState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _ConsultaViewState extends State<ConsultaView> {
   final PacientRepository pacientRequest = PacientRepository();
   final ConsultaRepository consultaResquet = ConsultaRepository();
   final EspecialistaRepository especialistaRequest = EspecialistaRepository();
@@ -119,13 +117,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                   ),
                                   Expanded(
                                     child: CircleAvatar(
-                                      radius: 25,
-                                      backgroundColor: Colors.black,
+                                      radius: 24,
+                                      backgroundColor: Colors.grey[300],
                                       child: CircleAvatar(
-                                        radius: 23,
+                                        radius: 22,
                                         backgroundColor: Colors.grey[100],
                                         child: Icon(Icons.menu,
-                                            color: Colors.grey[900], size: 35),
+                                            color: Colors.grey[900], size: 30),
                                       ),
                                     ),
                                   ),
@@ -141,65 +139,60 @@ class _MyHomePageState extends State<MyHomePage> {
                                     height: 50,
                                     child: Center(
                                       child: TextField(
-                                          cursorColor: Colors.grey,
-                                          cursorRadius: Radius.circular(20),
-                                          cursorWidth: 1.5,
-                                          style: TextStyle(
+                                        cursorColor: Colors.grey,
+                                        cursorRadius: Radius.circular(20),
+                                        cursorWidth: 1.5,
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.grey[900],
+                                        ),
+                                        decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: Colors
+                                              .white, //const Color(0xffEEF5FB),
+                                          labelStyle: TextStyle(
                                             fontSize: 15,
-                                            color: Colors.grey[900],
+                                            color: Colors
+                                                .grey[900], //Color(0xff7165E3),
                                           ),
-                                          decoration: InputDecoration(
-                                            filled: true,
-                                            fillColor: Colors
-                                                .white, //const Color(0xffEEF5FB),
-                                            labelStyle: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.grey[
-                                                  900], //Color(0xff7165E3),
-                                            ),
-                                            labelText:
-                                                "Pesquisar por especialista",
-                                            border: const OutlineInputBorder(
-                                                borderRadius: BorderRadius.all(
-                                              Radius.circular(15.0),
-                                            )),
-                                            enabledBorder:
-                                                const OutlineInputBorder(
+                                          hintText:
+                                              "Pesquisar por especialista",
+                                          border: const OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
-                                                Radius.circular(15.0),
-                                              ),
-                                              borderSide: BorderSide(
-                                                color: Color.fromRGBO(
-                                                    238,
-                                                    238,
-                                                    238,
-                                                    1), //Color(0xff7165E3),
-                                              ), // Cor da borda quando desabilitado
-                                            ),
-                                            floatingLabelStyle: TextStyle(
-                                              fontSize: 17,
-                                              color: Colors.grey[
-                                                  900], //Color(0xff7165E3),
-                                            ),
-                                            focusedBorder:
-                                                const OutlineInputBorder(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(15.0),
-                                              ),
-                                              borderSide: BorderSide(
-                                                color: Color.fromRGBO(
-                                                    224,
-                                                    224,
-                                                    224,
-                                                    1), //Color(0xff7165E3),
-                                              ), // Cor da borda quando em foco
-                                            ),
-                                            suffixIcon: Icon(
-                                              Icons.search,
-                                              size: 30.0,
-                                              color: Colors.grey[500],
-                                            ),
+                                            Radius.circular(15.0),
                                           )),
+                                          enabledBorder:
+                                              const OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(15.0),
+                                            ),
+                                            borderSide: BorderSide(
+                                              color: Color.fromRGBO(238, 238,
+                                                  238, 1), //Color(0xff7165E3),
+                                            ), // Cor da borda quando desabilitado
+                                          ),
+                                          floatingLabelStyle: TextStyle(
+                                            fontSize: 17,
+                                            color: Colors
+                                                .grey[900], //Color(0xff7165E3),
+                                          ),
+                                          focusedBorder:
+                                              const OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(15.0),
+                                            ),
+                                            borderSide: BorderSide(
+                                              color: Color.fromRGBO(224, 224,
+                                                  224, 1), //Color(0xff7165E3),
+                                            ), // Cor da borda quando em foco
+                                          ),
+                                          suffixIcon: Icon(
+                                            Icons.search,
+                                            size: 30.0,
+                                            color: Colors.grey[500],
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ],

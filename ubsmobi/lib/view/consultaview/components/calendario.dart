@@ -85,8 +85,8 @@ class _WeekDaysComponentState extends State<WeekDaysComponent> {
                             '08:00 - 18:00',
                             style: TextStyle(
                                 fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.lightGreen[800]),
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black),
                           ),
                           trailing: ElevatedButton(
                             style: ElevatedButton.styleFrom(

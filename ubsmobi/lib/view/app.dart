@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ubsmobi/view/consultaview/consultaview.dart';
+import 'package:ubsmobi/view/loginview/loginview.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -7,6 +8,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         // Defina a cor da borda padrão para transparente
@@ -17,7 +19,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: LoginView(), //const ConsultaView(),
     );
   }
 }
