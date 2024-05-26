@@ -60,6 +60,12 @@ class _ConsultaViewState extends State<ConsultaView> {
                     future: pacientRequest.getPacient(),
                     builder: (context, snapshot) {
                       final pacient = snapshot.data;
+                      /*if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+*/
                       return Container(
                         decoration: BoxDecoration(
                           color:
@@ -84,11 +90,8 @@ class _ConsultaViewState extends State<ConsultaView> {
                                         backgroundColor: Colors
                                             .grey[900], //Color(0xFF90ACFF),
                                         radius: 32,
-                                        child: Icon(
-                                          Icons.person,
-                                          size: 50.0,
-                                          color: Colors.white,
-                                        ),
+                                        backgroundImage: NetworkImage(
+                                            'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjfejDgfrvK7OHpDvSy4K1lGcytEmxmBXJQ83h4L0eMABsy1Aix738ivkMfvD_E-mrFaG2iKD98Z54BSnhc7w7LWvCfjSl8M2u-LSQhIcm5S066cyDbE_3qeQgwwOoAcpznxcVfR5y1HWyOOPvpcmSAOYeZ5-2o94EQKHWNvUK25pl9DHCD927PDtoCiw/w200-h200/image%20(2).jpg'),
                                       ),
                                     ),
                                   ),
@@ -186,10 +189,20 @@ class _ConsultaViewState extends State<ConsultaView> {
                                                   224, 1), //Color(0xff7165E3),
                                             ), // Cor da borda quando em foco
                                           ),
-                                          suffixIcon: Icon(
-                                            Icons.search,
-                                            size: 30.0,
-                                            color: Colors.grey[500],
+                                          suffixIcon: Padding(
+                                            padding: const EdgeInsets.all(2.0),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[900],
+                                                borderRadius:
+                                                    BorderRadius.circular(15.0),
+                                              ),
+                                              child: Icon(
+                                                Icons.search,
+                                                size: 25.0,
+                                                color: Colors.grey[100],
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -306,7 +319,11 @@ class _ConsultaViewState extends State<ConsultaView> {
                         );
                       }),
                 ),
-                WeekDaysComponent(getconsultasList: getconsultasList),
+                WeekDaysComponent(
+                  getconsultasList: getconsultasList,
+                  height: height,
+                  width: width,
+                ),
               ],
             ),
           ),

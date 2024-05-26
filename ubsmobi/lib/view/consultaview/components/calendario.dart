@@ -6,7 +6,13 @@ import '../../../models/especilista_model.dart';
 import '../../../repository/especlista_repository.dart';
 
 class WeekDaysComponent extends StatefulWidget {
-  const WeekDaysComponent({super.key, required this.getconsultasList});
+  WeekDaysComponent(
+      {super.key,
+      required this.getconsultasList,
+      required this.height,
+      required this.width});
+  double height;
+  double width;
 
   @override
   State<WeekDaysComponent> createState() => _WeekDaysComponentState();
@@ -55,8 +61,8 @@ class _WeekDaysComponentState extends State<WeekDaysComponent> {
         ),
         Card(
           child: Container(
-            width: 400,
-            height: 270,
+            width: widget.width,
+            height: widget.height * 0.35,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: Color(0xffF6F7FB),

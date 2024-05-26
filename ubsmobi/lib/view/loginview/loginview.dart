@@ -81,7 +81,7 @@ class _LoginViewState extends State<LoginView> {
             child: Column(
               children: [
                 Container(
-                  width: width * 0.9,
+                  width: width * 0.85,
                   height: 60,
                   child: TextField(
                     cursorColor: Colors.grey,
@@ -144,7 +144,7 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 SizedBox(height: 10),
                 Container(
-                  width: width * 0.9,
+                  width: width * 0.85,
                   height: 60,
                   child: TextField(
                     cursorColor: Colors.grey,
@@ -207,8 +207,8 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 SizedBox(height: 10),
                 Container(
-                    width: width * 0.9,
-                    height: 65,
+                    width: width * 0.85,
+                    height: 60,
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             elevation: 2,
@@ -216,7 +216,9 @@ class _LoginViewState extends State<LoginView> {
                               borderRadius: BorderRadius.circular(15.0),
                             ),
                             backgroundColor: Colors.grey[900]),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/consulta');
+                        },
                         child: Text(
                           "Entrar",
                           style: TextStyle(color: Colors.white),
@@ -227,8 +229,8 @@ class _LoginViewState extends State<LoginView> {
                         color: Colors.grey[100], fontWeight: FontWeight.bold)),
                 SizedBox(height: 10),
                 Container(
-                    width: width * 0.9,
-                    height: 65,
+                    width: width * 0.85,
+                    height: 60,
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -237,7 +239,9 @@ class _LoginViewState extends State<LoginView> {
                               borderRadius: BorderRadius.circular(15.0),
                             ),
                             backgroundColor: Colors.white),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/cadastro');
+                        },
                         child: Text(
                           "Cadastrar",
                           style: TextStyle(color: Colors.grey[900]),

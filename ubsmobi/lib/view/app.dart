@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ubsmobi/view/consultaview/consultaview.dart';
 import 'package:ubsmobi/view/loginview/loginview.dart';
+import 'package:ubsmobi/view/cadastroview/cadastroview.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -19,7 +20,12 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: LoginView(), //const ConsultaView(),
+      initialRoute: "/",
+      routes: {
+        "/consulta": (context) => const ConsultaView(),
+        "/": (context) => const LoginView(),
+        "/cadastro": (context) => const CadastroView(),
+      },
     );
   }
 }
