@@ -21,6 +21,7 @@ class _ConsultaViewState extends State<ConsultaView> {
   final EspecialistaRepository especialistaRequest = EspecialistaRepository();
   List<ConsultaModel> consultas = [];
   List<EspecialistaModel> especialistas = [];
+  bool isNotification = false;
 
   void getconsultasList() async {
     final listconsultas = await consultaResquet.getConsultas();
@@ -41,6 +42,58 @@ class _ConsultaViewState extends State<ConsultaView> {
     // TODO: implement initState
     super.initState();
     getconsultasList();
+  }
+
+  void _showRoundedModal(BuildContext context) {
+    showModalBottomSheet(
+      backgroundColor: Colors.grey[100],
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20.0),
+        ),
+      ),
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.25,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  'Campanha de vacinação',
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 20.0),
+                Text(
+                  'Leve seu filho menor de 12 anos para tomar a vacinação. Contamos com você nessa campanha.',
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20.0),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey[900],
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'Marcar vacinação',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -90,8 +143,8 @@ class _ConsultaViewState extends State<ConsultaView> {
                                         backgroundColor: Colors
                                             .grey[900], //Color(0xFF90ACFF),
                                         radius: 32,
-                                        backgroundImage: NetworkImage(
-                                            'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjfejDgfrvK7OHpDvSy4K1lGcytEmxmBXJQ83h4L0eMABsy1Aix738ivkMfvD_E-mrFaG2iKD98Z54BSnhc7w7LWvCfjSl8M2u-LSQhIcm5S066cyDbE_3qeQgwwOoAcpznxcVfR5y1HWyOOPvpcmSAOYeZ5-2o94EQKHWNvUK25pl9DHCD927PDtoCiw/w200-h200/image%20(2).jpg'),
+                                        backgroundImage: AssetImage(
+                                            'assets/images/journal-user-icon-circled.png'),
                                       ),
                                     ),
                                   ),
@@ -119,14 +172,26 @@ class _ConsultaViewState extends State<ConsultaView> {
                                     ),
                                   ),
                                   Expanded(
-                                    child: CircleAvatar(
-                                      radius: 24,
-                                      backgroundColor: Colors.grey[300],
+                                    child: InkWell(
+                                      onTap: () => _showRoundedModal(context),
                                       child: CircleAvatar(
-                                        radius: 22,
-                                        backgroundColor: Colors.grey[100],
-                                        child: Icon(Icons.menu,
-                                            color: Colors.grey[900], size: 30),
+                                        radius: 24,
+                                        backgroundColor: Colors.grey[300],
+                                        child: CircleAvatar(
+                                          radius: 22,
+                                          backgroundColor: isNotification
+                                              ? Colors.grey[100]
+                                              : Colors.red,
+                                          child: Icon(
+                                              isNotification
+                                                  ? Icons.notifications_outlined
+                                                  : Icons
+                                                      .notifications_on_outlined,
+                                              color: isNotification
+                                                  ? Colors.grey[900]
+                                                  : Colors.grey[100],
+                                              size: 30),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -272,8 +337,10 @@ class _ConsultaViewState extends State<ConsultaView> {
                                 Padding(
                                   padding: const EdgeInsets.all(3.0),
                                   child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      const Row(
+                                      Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
@@ -289,7 +356,15 @@ class _ConsultaViewState extends State<ConsultaView> {
                                         ],
                                       ),
                                       Text(
-                                          "${consultas[index].especialidade}:${consultas[index].especialista}"),
+                                          "${consultas[index].especialidade}: ${consultas[index].especialista}",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      Text("Ordem de chegada",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w400)),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
                                       ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                               backgroundColor:

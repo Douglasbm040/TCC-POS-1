@@ -61,8 +61,8 @@ class _LoginViewState extends State<LoginView> {
                     color: Colors.white,
                   ),
                 ),*/
-                Image.network(
-                    "https://ouch-cdn2.icons8.com/7BP_cWsTdlks4DlfR09o1E7-TQpi6GwUZNv0k3evfto/rs:fit:274:456/extend:false/wm:1:re:0:0:0.8/wmid:ouch/czM6Ly9pY29uczgu/b3VjaC1wcm9kLmFz/c2V0cy9wbmcvMTQv/MGFjNzM2ZjgtMjc2/NS00NGFkLTlhMmQt/YjA3N2ExNWJlZjNj/LnBuZw.png"),
+                Image.asset(
+                    "assets/images/3d-business-female-doctor-and-male-doctor-standing-together (1).png",),
             //],
             //),
           ),

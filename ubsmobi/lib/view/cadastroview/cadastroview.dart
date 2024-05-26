@@ -37,8 +37,8 @@ class CadastroViewState extends State<CadastroView> {
                         ),*/
                           child: SizedBox(
                             height: 190,
-                            child: Image.network(
-                              "https://ouch-cdn2.icons8.com/KmrTJKlmnHYBtx2gP2YOJOjB7o5hZCaX479hFBuZJM8/rs:fit:415:456/extend:false/wm:1:re:0:0:0.8/wmid:ouch/czM6Ly9pY29uczgu/b3VjaC1wcm9kLmFz/c2V0cy9wbmcvNjI4/LzUzN2ZhNTM2LTgz/Y2QtNDBmZC1iMjRi/LWEyMDFkNmVlOTVl/Yi5wbmc.png",
+                            child: Image.asset(
+                              "assets/images/3d-casual-life-young-man-sitting-with-laptop-and-waving.png",
                             ),
                           )),
                     ),
