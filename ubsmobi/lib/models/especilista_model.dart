@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class EspecialistaModel {
   final int idPessoa;
   final String nome;
@@ -14,8 +16,8 @@ class EspecialistaModel {
   factory EspecialistaModel.fromJson(Map<String, dynamic> json) {
     return EspecialistaModel(
       idPessoa: json['id_pessoa'],
-      nome: json['nome'],
-      especialidade: json['especialidade'],
+      nome:  utf8.decode((json['nome'].toString().codeUnits)),
+      especialidade:  utf8.decode((json['especialidade'].toString().codeUnits)),
       idEspecialista: json['id_especialista'],
     );
   }

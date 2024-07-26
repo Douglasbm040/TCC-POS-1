@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ubsmobi/repository/pacient_repository.dart';
 
 class CadastroView extends StatefulWidget {
   const CadastroView({super.key});
@@ -8,6 +9,12 @@ class CadastroView extends StatefulWidget {
 }
 
 class CadastroViewState extends State<CadastroView> {
+  TextEditingController email = TextEditingController();
+  TextEditingController senha = TextEditingController();
+  TextEditingController nome = TextEditingController();
+  TextEditingController nsus = TextEditingController();
+
+  TextEditingController endereco = TextEditingController();
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -28,7 +35,7 @@ class CadastroViewState extends State<CadastroView> {
                     top: 20,
                     child: CircleAvatar(
                       radius: 100,
-                      backgroundColor: Colors.grey[100],
+                      backgroundColor: Colors.black,
                       child: CircleAvatar(
                           radius: 98,
                           backgroundColor: Colors.grey[100],
@@ -36,7 +43,7 @@ class CadastroViewState extends State<CadastroView> {
                           "https://ouch-cdn2.icons8.com/KmrTJKlmnHYBtx2gP2YOJOjB7o5hZCaX479hFBuZJM8/rs:fit:415:456/extend:false/wm:1:re:0:0:0.8/wmid:ouch/czM6Ly9pY29uczgu/b3VjaC1wcm9kLmFz/c2V0cy9wbmcvNjI4/LzUzN2ZhNTM2LTgz/Y2QtNDBmZC1iMjRi/LWEyMDFkNmVlOTVl/Yi5wbmc.png",
                         ),*/
                           child: SizedBox(
-                            height: 190,
+                            height: 100,
                             child: Image.asset(
                               "assets/images/3d-casual-life-young-man-sitting-with-laptop-and-waving.png",
                             ),
@@ -71,8 +78,9 @@ class CadastroViewState extends State<CadastroView> {
               children: [
                 Container(
                   width: width * 0.85,
-                  height: 60,
+                  height: 50,
                   child: TextField(
+                    controller: nome,
                     cursorColor: Colors.grey,
                     cursorRadius: Radius.circular(20),
                     cursorWidth: 1.5,
@@ -134,8 +142,9 @@ class CadastroViewState extends State<CadastroView> {
                 SizedBox(height: 10),
                 Container(
                   width: width * 0.85,
-                  height: 60,
+                  height: 50,
                   child: TextField(
+                    controller: nsus,
                     cursorColor: Colors.grey,
                     cursorRadius: Radius.circular(20),
                     cursorWidth: 1.5,
@@ -197,8 +206,138 @@ class CadastroViewState extends State<CadastroView> {
                 SizedBox(height: 10),
                 Container(
                   width: width * 0.85,
-                  height: 60,
+                  height: 50,
                   child: TextField(
+                    controller: endereco,
+                    cursorColor: Colors.grey,
+                    cursorRadius: Radius.circular(20),
+                    cursorWidth: 1.5,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.grey[900],
+                    ),
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white, //const Color(0xffEEF5FB),
+                      labelStyle: TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey[900], //Color(0xff7165E3),
+                      ),
+                      hintText: "Endereço",
+                      border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                        Radius.circular(15.0),
+                      )),
+                      enabledBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(15.0),
+                        ),
+                        borderSide: BorderSide(
+                          color: Color.fromRGBO(
+                              238, 238, 238, 1), //Color(0xff7165E3),
+                        ), // Cor da borda quando desabilitado
+                      ),
+                      floatingLabelStyle: TextStyle(
+                        fontSize: 17,
+                        color: Colors.grey[900], //Color(0xff7165E3),
+                      ),
+                      focusedBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(15.0),
+                        ),
+                        borderSide: BorderSide(
+                          color: Color.fromRGBO(
+                              224, 224, 224, 1), //Color(0xff7165E3),
+                        ), // Cor da borda quando em foco
+                      ),
+                      suffixIcon: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[900],
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          child: Icon(
+                            Icons.house_rounded,
+                            size: 25.0,
+                            color: Colors.grey[100],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                Container(
+                  width: width * 0.85,
+                  height: 50,
+                  child: TextField(
+                    controller: email,
+                    keyboardType: TextInputType.emailAddress,
+                    cursorColor: Colors.grey,
+                    cursorRadius: Radius.circular(20),
+                    cursorWidth: 1.5,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.grey[900],
+                    ),
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white, //const Color(0xffEEF5FB),
+                      labelStyle: TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey[900], //Color(0xff7165E3),
+                      ),
+                      hintText: "Email",
+                      border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                        Radius.circular(15.0),
+                      )),
+                      enabledBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(15.0),
+                        ),
+                        borderSide: BorderSide(
+                          color: Color.fromRGBO(
+                              238, 238, 238, 1), //Color(0xff7165E3),
+                        ), // Cor da borda quando desabilitado
+                      ),
+                      floatingLabelStyle: TextStyle(
+                        fontSize: 17,
+                        color: Colors.grey[900], //Color(0xff7165E3),
+                      ),
+                      focusedBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(15.0),
+                        ),
+                        borderSide: BorderSide(
+                          color: Color.fromRGBO(
+                              224, 224, 224, 1), //Color(0xff7165E3),
+                        ), // Cor da borda quando em foco
+                      ),
+                      suffixIcon: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[900],
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          child: Icon(
+                            Icons.mail,
+                            size: 25.0,
+                            color: Colors.grey[100],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                Container(
+                  width: width * 0.85,
+                  height: 50,
+                  child: TextField(
+                    controller: senha,
                     cursorColor: Colors.grey,
                     cursorRadius: Radius.circular(20),
                     cursorWidth: 1.5,
@@ -260,7 +399,7 @@ class CadastroViewState extends State<CadastroView> {
                 SizedBox(height: 10),
                 Container(
                   width: width * 0.85,
-                  height: 60,
+                  height: 50,
                   child: TextField(
                     cursorColor: Colors.grey,
                     cursorRadius: Radius.circular(20),
@@ -323,7 +462,7 @@ class CadastroViewState extends State<CadastroView> {
                 SizedBox(height: 40),
                 Container(
                     width: width * 0.85,
-                    height: 60,
+                    height: 50,
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             elevation: 2,
@@ -331,7 +470,33 @@ class CadastroViewState extends State<CadastroView> {
                               borderRadius: BorderRadius.circular(15.0),
                             ),
                             backgroundColor: Colors.grey[900]),
-                        onPressed: () {},
+                        onPressed: () async {
+                          bool iscadastro = await PacientRepository().cadastro(
+                                  endereco.text,
+                                  email.text,
+                                  senha.text,
+                                  nsus.text,
+                                  nome.text) ??
+                              false;
+                          if (iscadastro) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Usuário criado '),
+                                duration: Duration(seconds: 2),
+                                backgroundColor: Colors.black,
+                              ),
+                            );
+                            Navigator.of(context).pushNamed('/');
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Error ao criar usuário'),
+                                duration: Duration(seconds: 2),
+                                backgroundColor: Colors.black,
+                              ),
+                            );
+                          }
+                        },
                         child: Text(
                           "Cadastrar",
                           style: TextStyle(color: Colors.white),
@@ -340,7 +505,7 @@ class CadastroViewState extends State<CadastroView> {
                 SizedBox(height: 10),
                 Container(
                     width: width * 0.85,
-                    height: 60,
+                    height: 50,
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(

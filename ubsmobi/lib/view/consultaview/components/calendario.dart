@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ubsmobi/repository/consulta_repository.dart';
 
+import '../../../models/consulta_model.dart';
 import '../../../models/especilista_model.dart';
 import '../../../repository/especlista_repository.dart';
 
 class WeekDaysComponent extends StatefulWidget {
   WeekDaysComponent(
       {super.key,
+      required this.idPaciente,
       required this.getconsultasList,
       required this.height,
       required this.width});
   double height;
   double width;
+  String idPaciente;
 
   @override
   State<WeekDaysComponent> createState() => _WeekDaysComponentState();
@@ -40,6 +43,15 @@ class _WeekDaysComponentState extends State<WeekDaysComponent> {
     getEspecialistaList();
   }
 
+  bool isFinalWeek() {
+    if (dayclicked.weekday == DateTime.saturday ||
+        dayclicked.weekday == DateTime.sunday) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   DateTime dayclicked = DateTime.now();
 
   @override
@@ -65,65 +77,123 @@ class _WeekDaysComponentState extends State<WeekDaysComponent> {
             height: widget.height * 0.35,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: Color(0xffF6F7FB),
+              color: const Color(0xffF6F7FB),
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: ListView.builder(
-                  itemCount: especialistas.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      elevation: 4,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Color(0xffEEF5FB),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: ListTile(
-                          title: Text(
-                            '${especialistas[index].especialidade} - ${especialistas[index].nome}\nVagas Disponíveis',
-                            style: TextStyle(
-                                color: Colors.grey[900],
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text(
-                            '08:00 - 18:00',
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w300,
-                                color: Colors.black),
-                          ),
-                          trailing: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.grey[900],
-                            ),
-                            onPressed: () async {
-                              DateFormat dateFormat = DateFormat('yyyy-MM-dd');
-                              print(especialistas[0].nome);
-                              print(dayclicked);
-                              if (dayclicked.weekday != DateTime.saturday &&
-                                  dayclicked.weekday != DateTime.sunday) {
-                                await consultaResquet.postConsultDay({
-                                  'esp': especialistas[index]
-                                      .idEspecialista
-                                      .toString(),
-                                  'date':
-                                      dateFormat.format(dayclicked).toString(),
-                                  "pac_des_nome": "5",
-                                });
-                                widget.getconsultasList();
-                              }
-                            },
-                            child: const Text(
-                              'AGENDAR',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
+              child: isFinalWeek()
+                  ? Container(
+                      child: const Center(
+                        child: Text(
+                          "Sem consultas disponíveis",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w300),
                         ),
                       ),
-                    );
-                  }),
+                    )
+                  : ListView.builder(
+                      itemCount: especialistas.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          elevation: 4,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xffEEF5FB),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: ListTile(
+                              title: Text(
+                                '${especialistas[index].especialidade} - ${especialistas[index].nome}\nVagas Disponíveis',
+                                style: TextStyle(
+                                    color: Colors.grey[900],
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              subtitle: const Text(
+                                '08:00 - 18:00',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.black),
+                              ),
+                              trailing: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.grey[900],
+                                ),
+                                onPressed: () async {
+                                  DateFormat dateFormat =
+                                      DateFormat('yyyy-MM-dd');
+                                  print(especialistas[0].nome);
+                                  print(dayclicked);
+                                  if (dayclicked.weekday != DateTime.saturday &&
+                                      dayclicked.weekday != DateTime.sunday) {
+                                    List<ConsultaModel> consultas =
+                                        await consultaResquet.getConsultas(
+                                            int.parse(widget.idPaciente));
+                                    int consultasagendada = consultas
+                                        .where((element) =>
+                                            element.data_marcada.day ==
+                                                dayclicked.day &&
+                                            element.data_marcada.month ==
+                                                dayclicked.month &&
+                                            element.data_marcada.year ==
+                                                dayclicked.year)
+                                        .toList()
+                                        .length;
+
+                                    if (consultas.length < 2 &&
+                                        consultasagendada == 0) {
+                                      await consultaResquet.postConsultDay({
+                                        'esp': especialistas[index]
+                                            .idEspecialista
+                                            .toString(),
+                                        'date': dateFormat
+                                            .format(dayclicked)
+                                            .toString(),
+                                        "pac_des_nome": widget.idPaciente,
+                                      });
+                                      widget.getconsultasList();
+                                    } else if (consultas.length == 2) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                              'Você pode agendar no máximo 2 consultas'),
+                                          duration: Duration(seconds: 2),
+                                          backgroundColor: Colors.red,
+                                        ),
+                                      );
+                                    } else if (consultasagendada != 0) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                              'Você já agendou uma consulta para este dia'),
+                                          duration: Duration(seconds: 2),
+                                          backgroundColor: Colors.red,
+                                        ),
+                                      );
+                                    }
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                            'Não pode agendar uma consulta no fim de semana'),
+                                        duration: Duration(seconds: 2),
+                                        backgroundColor: Colors.black,
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: const Text(
+                                  'AGENDAR',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
             ),
           ),
         ),
@@ -159,6 +229,7 @@ class WeekComponent extends StatelessWidget {
   final DateTime day;
   final bool isSelected;
   final VoidCallback onTap;
+  List<String> diaSemana = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
 
   WeekComponent({
     required this.day,
@@ -172,7 +243,7 @@ class WeekComponent extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            DateFormat('E').format(day),
+            diaSemana[day.weekday - 1],
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           GestureDetector(

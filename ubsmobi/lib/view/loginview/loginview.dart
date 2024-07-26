@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:ubsmobi/models/usuario_model.dart';
+import 'package:ubsmobi/repository/pacient_repository.dart';
+
+import '../../models/paciente_model.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -8,6 +12,8 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+  TextEditingController email = TextEditingController();
+  TextEditingController senha = TextEditingController();
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -62,7 +68,8 @@ class _LoginViewState extends State<LoginView> {
                   ),
                 ),*/
                 Image.asset(
-                    "assets/images/3d-business-female-doctor-and-male-doctor-standing-together (1).png",),
+              "assets/images/3d-business-female-doctor-and-male-doctor-standing-together (1).png",
+            ),
             //],
             //),
           ),
@@ -84,6 +91,7 @@ class _LoginViewState extends State<LoginView> {
                   width: width * 0.85,
                   height: 60,
                   child: TextField(
+                    controller: email,
                     cursorColor: Colors.grey,
                     cursorRadius: Radius.circular(20),
                     cursorWidth: 1.5,
@@ -98,7 +106,7 @@ class _LoginViewState extends State<LoginView> {
                         fontSize: 15,
                         color: Colors.grey[900], //Color(0xff7165E3),
                       ),
-                      hintText: "Nome...",
+                      hintText: "Email",
                       border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(
                         Radius.circular(15.0),
@@ -147,6 +155,7 @@ class _LoginViewState extends State<LoginView> {
                   width: width * 0.85,
                   height: 60,
                   child: TextField(
+                    controller: senha,
                     cursorColor: Colors.grey,
                     cursorRadius: Radius.circular(20),
                     cursorWidth: 1.5,
@@ -161,7 +170,7 @@ class _LoginViewState extends State<LoginView> {
                         fontSize: 15,
                         color: Colors.grey[900], //Color(0xff7165E3),
                       ),
-                      hintText: "Senha...",
+                      hintText: "Senha",
                       border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(
                         Radius.circular(15.0),
@@ -208,7 +217,7 @@ class _LoginViewState extends State<LoginView> {
                 SizedBox(height: 10),
                 Container(
                     width: width * 0.85,
-                    height: 60,
+                    height: 50,
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             elevation: 2,
@@ -216,8 +225,24 @@ class _LoginViewState extends State<LoginView> {
                               borderRadius: BorderRadius.circular(15.0),
                             ),
                             backgroundColor: Colors.grey[900]),
-                        onPressed: () {
-                          Navigator.of(context).pushNamed('/consulta');
+                        onPressed: () async {
+                          print("Entrar");
+                          UsuarioModel? login = await PacientRepository()
+                              .login(email.text, senha.text);
+                          print(login);
+                          if (login == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    'Não foi encontrado este email ou senha'),
+                                duration: Duration(seconds: 2),
+                                backgroundColor: Colors.black,
+                              ),
+                            );
+                          } else if (login != null) {
+                            Navigator.of(context)
+                                .pushNamed('/consulta', arguments: login);
+                          }
                         },
                         child: Text(
                           "Entrar",
@@ -230,7 +255,7 @@ class _LoginViewState extends State<LoginView> {
                 SizedBox(height: 10),
                 Container(
                     width: width * 0.85,
-                    height: 60,
+                    height: 50,
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(

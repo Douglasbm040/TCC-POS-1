@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class PacienteModel {
   String nome;
   String nsus;
@@ -6,7 +8,7 @@ class PacienteModel {
 
   factory PacienteModel.fromJson(Map<String, dynamic> json) {
     return PacienteModel(
-      nome: json['nome'],
+      nome:  utf8.decode((json['nome'].toString().codeUnits)),
       nsus: json['n_sus'],
     );
   }

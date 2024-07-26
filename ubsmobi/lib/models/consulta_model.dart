@@ -1,5 +1,7 @@
+import 'dart:convert';
+
 class ConsultaModel {
-  String data_marcada;
+  DateTime data_marcada;
   String especialista;
   String idespecialista;
   String especialidade;
@@ -12,10 +14,10 @@ class ConsultaModel {
 
   factory ConsultaModel.fromJson(Map<String, dynamic> json) {
     return ConsultaModel(
-      data_marcada: json['data_marcada'],
-      especialista: json['especialista'].toString(),
+      data_marcada: DateTime.parse(json['data_marcada'].toString()),
+      especialista: utf8.decode(json['especialista'].toString().codeUnits),
       idespecialista: json['idespecialista'].toString(),
-      especialidade: json['especialidade'],
+      especialidade: utf8.decode((json['especialidade'].toString().codeUnits)),
     );
   }
 }
