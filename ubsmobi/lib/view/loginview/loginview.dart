@@ -229,7 +229,7 @@ class _LoginViewState extends State<LoginView> {
                           print("Entrar");
                           UsuarioModel? login = await PacientRepository()
                               .login(email.text, senha.text);
-                          print(login);
+                          print(login ?? "print null");
                           if (login == null) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(

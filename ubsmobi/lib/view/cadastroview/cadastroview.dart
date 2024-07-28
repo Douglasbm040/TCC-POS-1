@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:ubsmobi/repository/pacient_repository.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:image/image.dart' as img;
 
 class CadastroView extends StatefulWidget {
   const CadastroView({super.key});
@@ -15,6 +20,39 @@ class CadastroViewState extends State<CadastroView> {
   TextEditingController nsus = TextEditingController();
 
   TextEditingController endereco = TextEditingController();
+  File? _image;
+  final _picker = ImagePicker();
+
+  Future<String> _resizeAndConvertImage(File imageFile) async {
+    // Load the image
+    final img.Image image = img.decodeImage(imageFile.readAsBytesSync())!;
+    print("imagem ${image == null}");
+
+    // Resize the image to a smaller size
+    final img.Image resizedImage = img.copyResize(image,
+        width: 300, height: 300); // Adjust the size as needed
+
+    // Convert the resized image to bytes
+    final List<int> resizedImageBytes = img.encodeJpg(resizedImage,
+        quality: 85); // Adjust the quality as needed
+
+    // Convert the bytes to base64
+    return base64Encode(resizedImageBytes);
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+        print("imagem:$_image");
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -37,17 +75,17 @@ class CadastroViewState extends State<CadastroView> {
                       radius: 100,
                       backgroundColor: Colors.black,
                       child: CircleAvatar(
-                          radius: 98,
-                          backgroundColor: Colors.grey[100],
-                          /*  backgroundImage: NetworkImage(
+                        radius: 98,
+                        backgroundColor: Colors.grey[100],
+                        /*  backgroundImage: NetworkImage(
                           "https://ouch-cdn2.icons8.com/KmrTJKlmnHYBtx2gP2YOJOjB7o5hZCaX479hFBuZJM8/rs:fit:415:456/extend:false/wm:1:re:0:0:0.8/wmid:ouch/czM6Ly9pY29uczgu/b3VjaC1wcm9kLmFz/c2V0cy9wbmcvNjI4/LzUzN2ZhNTM2LTgz/Y2QtNDBmZC1iMjRi/LWEyMDFkNmVlOTVl/Yi5wbmc.png",
                         ),*/
-                          child: SizedBox(
-                            height: 100,
-                            child: Image.asset(
-                              "assets/images/3d-casual-life-young-man-sitting-with-laptop-and-waving.png",
-                            ),
-                          )),
+                        backgroundImage: _image != null
+                            ? FileImage(_image!)
+                            : const AssetImage(
+                                    "assets/images/3d-casual-life-young-man-sitting-with-laptop-and-waving.png")
+                                as ImageProvider,
+                      ),
                     ),
                   ),
                   Positioned(
@@ -60,7 +98,7 @@ class CadastroViewState extends State<CadastroView> {
                             backgroundColor: Colors.grey[900],
                             radius: 28,
                             child: IconButton(
-                                onPressed: () {},
+                                onPressed: () async => _pickImage(),
                                 icon: Icon(
                                   Icons.photo_camera_rounded,
                                   color: Colors.grey[100],
@@ -471,12 +509,20 @@ class CadastroViewState extends State<CadastroView> {
                             ),
                             backgroundColor: Colors.grey[900]),
                         onPressed: () async {
+                          String base64Image = "";
+                          if (_image != null) {
+                            //final bytes = _image!.readAsBytesSync();
+                            //base64Image = base64Encode(bytes);
+                            base64Image = await _resizeAndConvertImage(_image!);
+                          }
+                          print("scriot L:$base64Image");
                           bool iscadastro = await PacientRepository().cadastro(
                                   endereco.text,
                                   email.text,
                                   senha.text,
                                   nsus.text,
-                                  nome.text) ??
+                                  nome.text,
+                                  base64Image) ??
                               false;
                           if (iscadastro) {
                             ScaffoldMessenger.of(context).showSnackBar(

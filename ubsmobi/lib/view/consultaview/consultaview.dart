@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:ubsmobi/models/consulta_model.dart';
 import 'package:ubsmobi/models/especilista_model.dart';
 import 'package:ubsmobi/models/paciente_model.dart';
@@ -40,6 +41,23 @@ class _ConsultaViewState extends State<ConsultaView> {
     });
   }
 
+  void _cancelConsultation(index) async {
+    bool iscancelada = await consultaResquet.deleteConsulta(
+        consultas[index].idespecialista.toString(),
+        argumentos.id_paciente.toString(),
+        consultas[index].data_marcada);
+    getconsultasList(argumentos.id_paciente);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(iscancelada
+            ? "Consulta do dia ${DateFormat('dd/MM/yyyy').format(consultas[index].data_marcada)} cancelada com sucesso"
+            : "Erro ao cancelar a consulta"),
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+
   void getEspecialistaList() async {
     final listespecialistas = await especialistaRequest.getEspecialistas();
     setState(() {
@@ -52,6 +70,82 @@ class _ConsultaViewState extends State<ConsultaView> {
     // TODO: implement initState
     super.initState();
     getEspecialistaList();
+  }
+
+  void _showRoundedModalCancelarConsulta(BuildContext context, index) {
+    showModalBottomSheet(
+      backgroundColor: Colors.white,
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20.0),
+        ),
+      ),
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.25,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const Text(
+                  'Confirma cancelar consulta?',
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+                Text(
+                    'Você realmente deseja cancelar a consulta do dia ${DateFormat('dd/MM/yyyy').format(consultas[index].data_marcada)} com a ${consultas[index].especialidade} ${consultas[index].especialista.toString()}?'),
+                const SizedBox(height: 60.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    SizedBox(
+                      height: 50,
+                      width: 100,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey[900],
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text(
+                          'Voltar',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 20.0),
+                    SizedBox(
+                      height: 50,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                        ),
+                        onPressed: () {
+                          _cancelConsultation(index);
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text(
+                          'Cancelar',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void _showRoundedModal(BuildContext context) {
@@ -154,8 +248,16 @@ class _ConsultaViewState extends State<ConsultaView> {
                                   backgroundColor:
                                       Colors.grey[900], //Color(0xFF90ACFF),
                                   radius: 32,
-                                  backgroundImage: const AssetImage(
-                                      'assets/images/journal-user-icon-circled.png'),
+                                  backgroundImage: argumentos.foto.isEmpty
+                                      ? const AssetImage(
+                                              'assets/images/journal-user-icon-circled.png')
+                                          as ImageProvider
+                                      : MemoryImage(argumentos.foto),
+
+                                  /* argumentos.foto == "" ? 
+                                  
+                                  : */
+                                  //const AssetImage('assets/images/journal-user-icon-circled.png'),
                                 ),
                               ),
                             ),
@@ -165,7 +267,8 @@ class _ConsultaViewState extends State<ConsultaView> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '👋 Olá ${argumentos.nome}',
+                                    //'Olá 👋,
+                                    '${argumentos.nome}',
                                     style: TextStyle(
                                         color: Colors.grey[900],
                                         fontWeight: FontWeight.bold,
@@ -388,109 +491,118 @@ class _ConsultaViewState extends State<ConsultaView> {
                 Container(
                   width: width * 0.95,
                   height: height * 0.2,
-                  child: ListView.builder(
-                      itemCount: consultas.length,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            width: width * 0.65,
-                            height: height * 0.07,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
+                  child: consultas.length == 0
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.cancel_outlined,
+                              size: 40,
+                              color: Colors.red,
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    height: 100,
-                                    //width: 70,
-                                    decoration: const BoxDecoration(
-                                        color: Color(0xffEEF5FB),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20))),
-                                    child: Center(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          " ${consultas[index].data_marcada.day}\n${diaSemana[consultas[index].data_marcada.weekday - 1]}",
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              color: Colors.grey[900],
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                            SizedBox(height: 10),
+                            Text(
+                              "Nenhuma consulta marcada",
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w300),
+                            ),
+                          ],
+                        )
+                      : ListView.builder(
+                          itemCount: consultas.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                width: width * 0.65,
+                                height: height * 0.07,
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20)),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(3.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        height: 100,
+                                        //width: 70,
+                                        decoration: const BoxDecoration(
+                                            color: Color(0xffEEF5FB),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(20))),
+                                        child: Center(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
                                             child: Text(
-                                              "Consulta",
+                                              " ${consultas[index].data_marcada.day}\n${diaSemana[consultas[index].data_marcada.weekday - 1]}",
                                               style: TextStyle(
                                                   fontSize: 18,
+                                                  color: Colors.grey[900],
                                                   fontWeight: FontWeight.bold),
                                             ),
                                           ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(3.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  "Consulta",
+                                                  style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Text(
+                                            "${consultas[index].especialidade}: ${consultas[index].especialista} ",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                            softWrap: true,
+                                          ),
+                                          Text(
+                                              "Senha da Fila: ${consultas[index].n_filas}°",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w400)),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Colors.redAccent),
+                                              onPressed: () =>
+                                                  _showRoundedModalCancelarConsulta(
+                                                      context, index),
+                                              child: const Text(
+                                                "CANCELAR",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              )),
                                         ],
                                       ),
-                                      Text(
-                                        "${consultas[index].especialidade}: ${consultas[index].especialista} ",
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                        softWrap: true,
-                                      ),
-                                      const Text("Ordem de chegada",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w400)),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                                  Colors.redAccent),
-                                          onPressed: () async {
-                                            await consultaResquet
-                                                .deleteConsulta(
-                                                    consultas[index]
-                                                        .idespecialista
-                                                        .toString(),
-                                                    argumentos.id_paciente
-                                                        .toString(),
-                                                    consultas[index]
-                                                        .data_marcada);
-                                            getconsultasList(
-                                                argumentos.id_paciente);
-                                          },
-                                          child: const Text(
-                                            "CANCELAR",
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          )),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }),
+                              ),
+                            );
+                          }),
                 ),
                 WeekDaysComponent(
                   getconsultasList: getconsultasList,

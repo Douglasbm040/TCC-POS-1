@@ -43,7 +43,7 @@ class PacientRepository {
   }
 
   Future<bool?> cadastro(String endereco, String email, String senha,
-      String nsus, String nome) async {
+      String nsus, String nome, String foto) async {
     var url = Uri.parse("${UtilsUrl.IPPORT}/criarusuario");
 
     var response = await http.post(
@@ -57,10 +57,11 @@ class PacientRepository {
         'senha': senha,
         'n_sus': nsus,
         'nome': nome,
-        'rua': " "
+        'rua': " ",
+        'foto': foto
       }),
     );
-
+    print(response.statusCode);
     if (response.statusCode == 201) {
       return true;
       //return UsuarioModel.fromJson(jsonDecode(response.body));

@@ -11,6 +11,7 @@ class ConsultaRepository {
   var apiUrl = 'consulta/marcadaspacient/5';
 
   Future<List<ConsultaModel>> getConsultas(int idpaciente) async {
+    print("idpaciente: $idpaciente");
     var url =
         Uri.parse("${UtilsUrl.IPPORT}/consulta/marcadaspacient/$idpaciente");
     var response = await http.get(url);
@@ -27,7 +28,7 @@ class ConsultaRepository {
   Future<Map<String, dynamic>> postConsultDay(
       Map<String, String> consult) async {
     final url = Uri.parse('${UtilsUrl.IPPORT}/consulta/marcar');
-    print(consult);
+    print("consulta para: $consult");
     final response = await http.post(
       url,
       headers: <String, String>{
@@ -45,7 +46,7 @@ class ConsultaRepository {
     }
   }
 
-  Future<void> deleteConsulta(
+  Future<bool> deleteConsulta(
       String idEspecialista, String idPaciente, DateTime data) async {
     final url = Uri.parse('${UtilsUrl.IPPORT}/consulta/cancelar');
     print(data.toString());
@@ -64,8 +65,10 @@ class ConsultaRepository {
     print(response.statusCode);
     if (response.statusCode == 200) {
       print('Consulta deletada com sucesso.');
+      return true;
     } else {
-      throw Exception('Falha ao deletar consulta: ${response.statusCode}');
+      print('Falha ao deletar consulta: ${response.statusCode}');
+      return false;
     }
   }
 }

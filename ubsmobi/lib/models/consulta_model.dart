@@ -5,12 +5,15 @@ class ConsultaModel {
   String especialista;
   String idespecialista;
   String especialidade;
+  int n_filas;
 
-  ConsultaModel(
-      {required this.data_marcada,
-      required this.especialista,
-      required this.idespecialista,
-      required this.especialidade});
+  ConsultaModel({
+    required this.data_marcada,
+    required this.especialista,
+    required this.idespecialista,
+    required this.especialidade,
+    required this.n_filas,
+  });
 
   factory ConsultaModel.fromJson(Map<String, dynamic> json) {
     return ConsultaModel(
@@ -18,6 +21,7 @@ class ConsultaModel {
       especialista: utf8.decode(json['especialista'].toString().codeUnits),
       idespecialista: json['idespecialista'].toString(),
       especialidade: utf8.decode((json['especialidade'].toString().codeUnits)),
+      n_filas: json['n_fila'],
     );
   }
 }

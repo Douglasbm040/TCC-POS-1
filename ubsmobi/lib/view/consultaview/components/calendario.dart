@@ -82,14 +82,27 @@ class _WeekDaysComponentState extends State<WeekDaysComponent> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: isFinalWeek()
-                  ? Container(
-                      child: const Center(
-                        child: Text(
-                          "Sem consultas disponíveis",
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.calendar_month_rounded,
+                            size: 50, color: Colors.red),
+                        SizedBox(height: 10),
+                        Text(
+                          "Sem consultas disponíveis para",
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w300),
+                            fontSize: 18,
+                            fontWeight: FontWeight.w300,
+                          ),
                         ),
-                      ),
+                        Text(
+                          "o dia selecionado.",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
+                      ],
                     )
                   : ListView.builder(
                       itemCount: especialistas.length,
@@ -150,7 +163,8 @@ class _WeekDaysComponentState extends State<WeekDaysComponent> {
                                         'date': dateFormat
                                             .format(dayclicked)
                                             .toString(),
-                                        "pac_des_nome": widget.idPaciente,
+                                        "pac_des_nome":
+                                            widget.idPaciente.toString(),
                                       });
                                       widget.getconsultasList();
                                     } else if (consultas.length == 2) {

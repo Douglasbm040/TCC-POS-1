@@ -12,6 +12,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
+        dialogBackgroundColor: Colors.white,
+
         // Defina a cor da borda padrão para transparente
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(
